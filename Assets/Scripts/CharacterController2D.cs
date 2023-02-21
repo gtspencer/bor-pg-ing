@@ -66,6 +66,9 @@ public class CharacterController2D : MonoBehaviour, IPointerClickHandler
         Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
 
         RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
+        
+        if (!hit)
+            return;
 
         var interactable = hit.collider.gameObject.GetComponent<IInteractable>();
         
@@ -73,22 +76,6 @@ public class CharacterController2D : MonoBehaviour, IPointerClickHandler
             interactable.Interact();
         
         Debug.LogError(hit.collider.gameObject.name);
-        
-        /*Debug.LogError("try interact");
-        var hits = Physics2D.OverlapCircleAll(transform.position, 1f);
-        Debug.DrawLine(transform.position, Vector3.up);
-        foreach (Collider2D c in hits)
-        {
-            Debug.LogError(c.gameObject.name);
-            var interactable = c.GetComponent<IInteractable>();
-            if (interactable != null)
-            {
-                interactable.Interact();
-                return;
-            }
-        }*/
-        
-        
     }
 
     private void FixedUpdate()

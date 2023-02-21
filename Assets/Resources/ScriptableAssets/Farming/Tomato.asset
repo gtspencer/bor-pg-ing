@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9300b6df9c8794551b3a0bc5e51fb430, type: 3}
+  m_Name: Tomato
+  m_EditorClassIdentifier: 
+  plantName: Tomato
+  description: Once believed to be posionous
+  harvestable: 1
+  edible: 1
+  cookable: 1
+  craftable: 0
+  singleUse: 0
+  mutatable: 0
+  plantPhases:
+  - {fileID: 5676557975786801406, guid: d8e8faa00871c448d8cdd3253ddf1177, type: 3}
+  - {fileID: 5837099966769130633, guid: d8e8faa00871c448d8cdd3253ddf1177, type: 3}
+  - {fileID: -1154585496681916454, guid: d8e8faa00871c448d8cdd3253ddf1177, type: 3}
+  - {fileID: 7615517831003101548, guid: d8e8faa00871c448d8cdd3253ddf1177, type: 3}
+  - {fileID: -6298926748983034480, guid: d8e8faa00871c448d8cdd3253ddf1177, type: 3}
+  - {fileID: 6541508295191479496, guid: d8e8faa00871c448d8cdd3253ddf1177, type: 3}
+  seedIcon: {fileID: 6790902163275402405, guid: d8e8faa00871c448d8cdd3253ddf1177, type: 3}
+  inventoryIcon: {fileID: 2134584563556110807, guid: d8e8faa00871c448d8cdd3253ddf1177, type: 3}
+  daysUntilBloom: 6
+  lightRequirement: 2
+  waterRequirement: 1
