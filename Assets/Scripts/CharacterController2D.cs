@@ -13,6 +13,8 @@ public class CharacterController2D : MonoBehaviour, IPointerClickHandler
     [SerializeField]
     private float speed = 2f;
 
+    private PlayerStateMachine playerStateMachine;
+
     private Vector2 currentMotion;
 
     private Vector2 lastMotion;
@@ -22,18 +24,20 @@ public class CharacterController2D : MonoBehaviour, IPointerClickHandler
     [SerializeField]
     private float maxInteractionDistance = 2f;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        playerStateMachine = GetComponent<PlayerStateMachine>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (playerStateMachine.currentState != PlayerStateMachine.States.Roam)
+            return;
+        
         ProcessPlayerInputs();
-        
-        
     }
 
     private void ProcessPlayerInputs()
@@ -75,7 +79,7 @@ public class CharacterController2D : MonoBehaviour, IPointerClickHandler
         if (interactable != null && Vector2.Distance(transform.position, hit.transform.position) <= maxInteractionDistance)
             interactable.Interact();
         
-        Debug.LogError(hit.collider.gameObject.name);
+        Debug.Log("User clicked: " + hit.collider.gameObject.name);
     }
 
     private void FixedUpdate()

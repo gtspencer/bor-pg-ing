@@ -9,16 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9300b6df9c8794551b3a0bc5e51fb430, type: 3}
-  m_Name: Tomato
+  m_Script: {fileID: 11500000, guid: 7b9fc74fd9cecd547bcf2e10a4cfa560, type: 3}
+  m_Name: TomatoPlant
   m_EditorClassIdentifier: 
-  plantName: Tomato
-  description: Once believed to be posionous
+  name: Tomato
+  description: Once thought to be poisionous
+  inventoryIcon: {fileID: 6790902163275402405, guid: d8e8faa00871c448d8cdd3253ddf1177, type: 3}
+  itemType: 1
   harvestable: 1
+  harvestedItem: {fileID: 0}
   edible: 1
   cookable: 1
   craftable: 0
-  singleUse: 0
+  singleGrow: 0
   mutatable: 0
   plantPhases:
   - {fileID: 5676557975786801406, guid: d8e8faa00871c448d8cdd3253ddf1177, type: 3}
@@ -27,8 +30,6 @@ MonoBehaviour:
   - {fileID: 7615517831003101548, guid: d8e8faa00871c448d8cdd3253ddf1177, type: 3}
   - {fileID: -6298926748983034480, guid: d8e8faa00871c448d8cdd3253ddf1177, type: 3}
   - {fileID: 6541508295191479496, guid: d8e8faa00871c448d8cdd3253ddf1177, type: 3}
-  seedIcon: {fileID: 6790902163275402405, guid: d8e8faa00871c448d8cdd3253ddf1177, type: 3}
-  inventoryIcon: {fileID: 2134584563556110807, guid: d8e8faa00871c448d8cdd3253ddf1177, type: 3}
   daysUntilBloom: 6
   lightRequirement: 2
-  waterRequirement: 1
+  waterRequirement: 0

@@ -5,46 +5,46 @@ using Resources.ScriptableAssets.Farming;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(FarmableScriptableAsset))]
-public class FarmableEditor : Editor
+[CustomEditor(typeof(PlantScriptableObject))]
+public class PlantObjectEditor : Editor
 {
-    private FarmableScriptableAsset farmable;
-
+    private PlantScriptableObject plantObject;
+    
     private void OnEnable()
     {
-        farmable = target as FarmableScriptableAsset;
+        plantObject = target as PlantScriptableObject;
     }
 
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
-        
-        if (farmable.daysUntilBloom < farmable.plantPhases.Length)
+
+        if (plantObject == null)
+            return;
+
+        plantObject.harvestable = EditorGUILayout.Toggle("harvestable", plantObject.harvestable);
+
+        if (plantObject.daysUntilBloom < plantObject.plantPhases.Length)
         {
-            EditorGUILayout.HelpBox($"More phases ({farmable.plantPhases.Length}) than days ({farmable.daysUntilBloom}), defaulting to 1 day per phase", MessageType.Warning);
+            EditorGUILayout.HelpBox($"More phases ({plantObject.plantPhases.Length}) than days ({plantObject.daysUntilBloom}), defaulting to 1 day per phase", MessageType.Warning);
         }
 
-        if (farmable.seedIcon != null)
+        if (plantObject.inventoryIcon != null)
         {
-            DrawSprite("Seed Icon", farmable.seedIcon);
+            DrawSprite("Inventory Icon", plantObject.inventoryIcon);
         }
 
-        if (farmable.inventoryIcon != null)
+        if (plantObject.plantPhases.Length > 0)
         {
-            DrawSprite("Inventory Icon", farmable.inventoryIcon);
-        }
-
-        if (farmable.plantPhases.Length > 0)
-        {
-            for (int i = 0; i < farmable.plantPhases.Length; i++)
+            for (int i = 0; i < plantObject.plantPhases.Length; i++)
             {
                 var labelText = $"Phase {i} Sprite";
                 if (i == 0)
                     labelText = "Seed sprite";
-                if (i == farmable.plantPhases.Length - 1)
+                if (i == plantObject.plantPhases.Length - 1)
                     labelText = "Bloom Sprite";
                 
-                DrawSprite(labelText, farmable.plantPhases[i]);
+                DrawSprite(labelText, plantObject.plantPhases[i]);
             }
         }
     }

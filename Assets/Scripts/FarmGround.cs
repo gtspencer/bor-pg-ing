@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class FarmGround : MonoBehaviour, IInteractable
 {
-    private FarmableScriptableAsset currentPlant;
+    private PlantScriptableObject currentPlant;
     public SpriteRenderer renderer;
 
     private int currentDayOfPlant;
@@ -20,7 +20,7 @@ public class FarmGround : MonoBehaviour, IInteractable
     
     public void Interact()
     {
-        var tomato = UnityEngine.Resources.Load<FarmableScriptableAsset>("ScriptableAssets/Farming/Tomato");
+        var tomato = UnityEngine.Resources.Load<PlantScriptableObject>("ScriptableAssets/Farming/TomatoPlant");
         Plant(tomato);
     }
 
@@ -43,7 +43,7 @@ public class FarmGround : MonoBehaviour, IInteractable
         }
     }
 
-    public void Plant(FarmableScriptableAsset newPlant)
+    public void Plant(PlantScriptableObject newPlant)
     {
         if (currentPlant != null)
             return;
@@ -62,17 +62,31 @@ public class FarmGround : MonoBehaviour, IInteractable
 
     public void PickPlant()
     {
-        if (currentDayOfPlant < currentPlant.plantPhases.Length)
+        if (!currentPlant.harvestable || currentDayOfPlant < currentPlant.plantPhases.Length)
         {
             return;
         }
 
-        renderer.sprite = null;
+        if (currentPlant.singleGrow)
+        {
+            renderer.sprite = null;
+            Destroy(currentPlant);
+        }
+        else
+        {
+            currentDayOfPlant = 1;
+
+            renderer.sprite = currentPlant.plantPhases[currentDayOfPlant];
+            wateredSchedule[0] = false;
+        }
+        
+        // TODO add harvestable item to users inventory
     }
 
     public void KillPlant()
     {
         renderer.sprite = null;
+        Destroy(currentPlant);
         Debug.Log("Plant is dead :(");
     }
 
@@ -88,7 +102,7 @@ public class FarmGround : MonoBehaviour, IInteractable
         {
             // too much watering will kill it
             // must water every other day
-            case FarmableScriptableAsset.WaterRequirements.Low:
+            case PlantScriptableObject.WaterRequirements.Low:
                 bool previousDay = wateredSchedule[0];
 
                 if (!previousDay)
@@ -110,7 +124,7 @@ public class FarmGround : MonoBehaviour, IInteractable
                 break;
             // to little watering will kill it
             // must water every day
-            case FarmableScriptableAsset.WaterRequirements.High:
+            case PlantScriptableObject.WaterRequirements.High:
                 // if not watered previous day, kill it
                 if (!wateredSchedule[currentDayOfPlant - 1])
                 {
@@ -118,7 +132,7 @@ public class FarmGround : MonoBehaviour, IInteractable
                     return;
                 }
                 break;
-            case FarmableScriptableAsset.WaterRequirements.Any:
+            case PlantScriptableObject.WaterRequirements.Any:
                 break;
         }
     }
