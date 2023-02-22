@@ -10,7 +10,7 @@ namespace Resources.ScriptableAssets.Farming
         // produce will be linked
         private void Awake()
         {
-            itemType = ItemType.Plant;
+            category = Category.Plant;
         }
 
         public bool harvestable = true;
