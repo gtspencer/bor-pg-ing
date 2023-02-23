@@ -14,6 +14,7 @@ public class Inventory : MonoBehaviour
 
     private void Start()
     {
+        inventoryItems = new Dictionary<ItemScriptableObject.ItemType, int>();
         currentSelected = hotBarSlots[0];
         currentSelected.SetSelected();
     }
@@ -88,15 +89,59 @@ public class Inventory : MonoBehaviour
     public void AddItem(ItemScriptableObject item)
     {
         if (inventoryItems.ContainsKey(item.itemType))
+        {
             inventoryItems[item.itemType]++;
+            UpdateInventoryUI(item);
+        }
         else
+        {
             AddNewItem(item);
+            UpdateInventoryUI(item, true);
+        }
+    }
+
+    private void UpdateInventoryUI(ItemScriptableObject item, bool newItem = false)
+    {
+        if (newItem)
+        {
+            foreach (HotBarSlotItem slotItem in hotBarSlots)
+            {
+                if (!slotItem.inventoryItemPresentation.isOccupied)
+                {
+                    slotItem.inventoryItemPresentation.SlotItem(item);
+                    return;
+                }
+            }
+        }
+        
+        foreach (HotBarSlotItem slotItem in hotBarSlots)
+        {
+            if (slotItem.inventoryItemPresentation.GetSlottedItem() == item)
+            {
+                slotItem.inventoryItemPresentation.AddItem();
+                return;
+            }
+        }
+    }
+
+    public bool CanPickupItem(ItemScriptableObject item)
+    {
+        /*bool roomAvailable = false;
+        foreach (HotBarSlotItem slotItem in hotBarSlots)
+        {
+            if (slotItem.inventoryItem == item && slotItem.count < slotItem.inventoryItem.maxStack)
+                return true;
+
+            if (!slotItem.occupied)
+                return true;
+        }*/
+        
+        return true;
     }
 
     private void AddNewItem(ItemScriptableObject item)
     {
         inventoryItems[item.itemType] = 1;
-        
     }
 
     public void RemoveItem(ItemScriptableObject item)

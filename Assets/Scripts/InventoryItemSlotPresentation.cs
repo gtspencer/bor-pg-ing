@@ -5,8 +5,14 @@ using UnityEngine.UI;
 
 public class InventoryItemSlotPresentation : MonoBehaviour
 {
+    [SerializeField] private RawImage itemSprite;
     [SerializeField] private Text countText;
-    public ItemScriptableObject slottedItem;
+    private ItemScriptableObject slottedItem;
+
+    public bool isOccupied
+    {
+        get => slottedItem != null;
+    }
     
     public int itemCount;
     public int maxStack;
@@ -16,6 +22,13 @@ public class InventoryItemSlotPresentation : MonoBehaviour
         this.slottedItem = slottedItem;
         maxStack = slottedItem.maxInventoryStack;
         itemCount = 0;
+        UpdateCountText();
+        itemSprite.texture = slottedItem.inventoryIcon.texture;
+    }
+
+    public ItemScriptableObject GetSlottedItem()
+    {
+        return slottedItem;
     }
 
     public void RemoveSlottedItem()
@@ -41,6 +54,7 @@ public class InventoryItemSlotPresentation : MonoBehaviour
     {
         if (itemCount == 1)
         {
+            itemCount--;
             RemoveSlottedItem();
             return;
         }

@@ -27,7 +27,7 @@ public class CharacterController2D : MonoBehaviour, IPointerClickHandler
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
+        anim = GetComponentInChildren<Animator>();
         playerStateMachine = GetComponent<PlayerStateMachine>();
     }
 
