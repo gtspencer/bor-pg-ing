@@ -9,6 +9,7 @@ public abstract class ItemScriptableObject : ScriptableObject
     public string description;
     public int maxInventoryStack;
     public Sprite inventoryIcon;
+    public float inventoryIconScale = 1;
     public Category category;
     public ItemType itemType;
 

@@ -42,7 +42,10 @@ public class InventoryScriptableObject : ScriptableObject
         {
             if (Container[i].item == item)
             {
-                Container[i].UpdateSlot(null, 0);
+                if (Container[i].amount == amount)
+                    Container[i].UpdateSlot(null, 0);
+                else
+                    Container[i].UpdateSlot(item, Container[i].amount - amount);
             }
         }
     }

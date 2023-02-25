@@ -1,36 +1,46 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-[RequireComponent(typeof(SpriteRenderer))]
-[RequireComponent(typeof(BoxCollider2D))]
 public class PickUpItem : MonoBehaviour
 {
     [SerializeField] private ItemScriptableObject item;
-    [SerializeField] private float scale = 1;
     [SerializeField] private int amount = 1;
 
-    private SpriteRenderer renderer;
-    private Collider2D collider;
+    private SpriteRenderer ren;
+    private BoxCollider2D coll;
 
     private bool pickedUp;
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
-        renderer = this.GetComponent<SpriteRenderer>();
-        collider = this.GetComponent<Collider2D>();
+        ren = this.AddComponent<SpriteRenderer>();
+        ren.sprite = item.inventoryIcon;
         
-        collider.isTrigger = true;
+        coll = this.AddComponent<BoxCollider2D>();
+        coll.isTrigger = true;
 
-        renderer.sprite = item.inventoryIcon;
+        this.transform.localScale *= item.inventoryIconScale;
+    }
 
-        this.transform.localScale *= scale;
+    private void SetupPickup()
+    {
+        
+    }
+
+    private bool recentlyPlaced;
+    public void PlacePickupItem(ItemScriptableObject item, int amount)
+    {
+        this.item = item;
+        this.amount = amount;
+        recentlyPlaced = true;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (pickedUp)
+        if (pickedUp || recentlyPlaced)
             return;
         
         var inventory = other.gameObject.GetComponent<PlayerInventoryManager>();
@@ -45,6 +55,15 @@ public class PickUpItem : MonoBehaviour
         pickedUp = true;
         
         StartCoroutine(DoPickup(other.transform));
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        var inventory = other.gameObject.GetComponent<PlayerInventoryManager>();
+        if (inventory == null)
+            return;
+
+        recentlyPlaced = false;
     }
 
     private IEnumerator DoPickup(Transform player)

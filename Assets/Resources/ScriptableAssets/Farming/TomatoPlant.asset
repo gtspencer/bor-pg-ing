@@ -16,6 +16,7 @@ MonoBehaviour:
   description: Once thought to be poisionous
   maxInventoryStack: 10
   inventoryIcon: {fileID: 6790902163275402405, guid: d8e8faa00871c448d8cdd3253ddf1177, type: 3}
+  inventoryIconScale: 0.5
   category: 1
   itemType: 0
   harvestable: 1

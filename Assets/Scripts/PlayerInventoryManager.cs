@@ -97,6 +97,16 @@ public class PlayerInventoryManager : MonoBehaviour
         return inventory.AddItem(item, amount);
     }
 
+    public void DropItem(ItemScriptableObject item, int amount)
+    {
+        var droppedItem = new GameObject();
+        var pickupItem = droppedItem.AddComponent<PickUpItem>();
+
+        pickupItem.PlacePickupItem(item, amount);
+
+        droppedItem.transform.position = transform.position;
+    }
+
     private void UpdateInventoryUI(ItemScriptableObject item, int amount, bool newItem = false)
     {
         if (newItem)

@@ -16,5 +16,6 @@ MonoBehaviour:
   description: Its an axe okay
   maxInventoryStack: 1
   inventoryIcon: {fileID: 21300000, guid: 8df898f5578b71d4bb2cd45193a5690b, type: 3}
+  inventoryIconScale: 1
   category: 3
   itemType: 2

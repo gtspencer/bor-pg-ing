@@ -9,6 +9,7 @@ using UnityEngine.UI;
 
 public class DisplayInventory : MonoBehaviour
 {
+    public PlayerInventoryManager inventoryManager;
     public InventoryScriptableObject inventory;
     public GameObject itemSlotPrefab;
 
@@ -27,6 +28,9 @@ public class DisplayInventory : MonoBehaviour
     void Start()
     {
         CreateSlots();
+        
+        AddSwapEvent(gameObject, EventTriggerType.PointerEnter, delegate(BaseEventData arg0) { EnterInventoryScreen(); });
+        AddSwapEvent(gameObject, EventTriggerType.PointerExit, delegate(BaseEventData arg0) { ExitInventoryScreen(); });
     }
 
     private GameObject CreateNewSlot(int i)
@@ -122,19 +126,19 @@ public class DisplayInventory : MonoBehaviour
     
     private void OnDragStart(GameObject slot)
     {
+        if (itemsDisplayed[slot].item == null)
+            return;
+        
         var mouseObject = new GameObject();
         var rt = mouseObject.AddComponent<RectTransform>();
         rt.sizeDelta = new Vector2(40, 40);
         mouseObject.transform.SetParent(transform.parent);
 
-        if (itemsDisplayed[slot].item != null)
-        {
-            var img = mouseObject.AddComponent<Image>();
-            img.sprite = itemsDisplayed[slot].item.inventoryIcon;
+        var img = mouseObject.AddComponent<Image>();
+        img.sprite = itemsDisplayed[slot].item.inventoryIcon;
             
-            // mouse ignores object
-            img.raycastTarget = false;
-        }
+        // mouse ignores object
+        img.raycastTarget = false;
 
         mouseItem.obj = mouseObject;
         mouseItem.item = itemsDisplayed[slot];
@@ -142,14 +146,26 @@ public class DisplayInventory : MonoBehaviour
     
     private void OnDragEnd(GameObject slot)
     {
+        if (mouseItem.obj == null)
+            return;
+        
         if (mouseItem.hoverObject)
         {
-            // item can be placed
+            // item can be placed in slot
             inventory.MoveItems(itemsDisplayed[slot], itemsDisplayed[mouseItem.hoverObject]);
         }
         else
         {
+            // item is hovering over inventory screen
+            if (mouseInInventory)
+            {
+                Destroy(mouseItem.obj);
+                mouseItem.item = null;
+                return;
+            }
+            
             // remove item
+            inventoryManager.DropItem(itemsDisplayed[slot].item, itemsDisplayed[slot].amount);
             inventory.RemoveItem(itemsDisplayed[slot].item, itemsDisplayed[slot].amount);
         }
         Destroy(mouseItem.obj);
@@ -160,6 +176,17 @@ public class DisplayInventory : MonoBehaviour
     {
         if (mouseItem.obj != null)
             mouseItem.obj.GetComponent<RectTransform>().position = Input.mousePosition;
+    }
+
+    private bool mouseInInventory;
+    private void ExitInventoryScreen()
+    {
+        mouseInInventory = false;
+    }
+
+    private void EnterInventoryScreen()
+    {
+        mouseInInventory = true;
     }
 }
 
