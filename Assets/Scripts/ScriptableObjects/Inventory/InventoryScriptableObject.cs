@@ -21,7 +21,8 @@ public class InventoryScriptableObject : ScriptableObject
         bool hasItem = false;
         for (int i = 0; i < Container.Count; i++)
         {
-            if (Container[i].item == item)
+            // TODO add amount up to maxAmount, then overflow in to next slot
+            if (Container[i].item == item && Container[i].amount + amount <= Container[i].maxAmount)
             {
                 Container[i].AddAmount(amount);
                 hasItem = true;
@@ -63,17 +64,21 @@ public class InventorySlot
 {
     public ItemScriptableObject item;
     public int amount;
-    public int maxAmount;
+    public int maxAmount => item.maxInventoryStack;
 
     public InventorySlot(ItemScriptableObject item, int amount)
     {
         this.item = item;
         this.amount = amount;
-        this.maxAmount = item.maxInventoryStack;
     }
 
     public void AddAmount(int value)
     {
         amount += value;
+    }
+
+    public void RemoveAmount(int value)
+    {
+        amount -= value;
     }
 }

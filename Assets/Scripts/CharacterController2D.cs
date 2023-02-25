@@ -25,6 +25,8 @@ public class CharacterController2D : MonoBehaviour, IPointerClickHandler
 
     private bool moving;
 
+    private InventorySlot currentSelectedSlot;
+
     [SerializeField]
     private float maxInteractionDistance = 2f;
     // Start is called before the first frame update
@@ -102,9 +104,18 @@ public class CharacterController2D : MonoBehaviour, IPointerClickHandler
 
         if (interactable != null && Vector2.Distance(transform.position, hit.transform.position) <= maxInteractionDistance)
         {
-            InteractionData interactionData = new InteractionData(/*inventory.CurrentSelected.inventoryItemPresentation.GetSlottedItem()*/null);
-            interactable.Interact(interactionData);
-            
+            if (currentSelectedSlot.item is ToolScriptableObject)
+            {
+                // TODO tool logic
+            }
+            else
+            {
+                // pass in the inventory slot that is held
+                // interactable object removes amount from slot
+                InteractionData interactionData = new InteractionData(currentSelectedSlot);
+                interactable.Interact(interactionData);
+            }
+
             Debug.Log("User clicked interactable: " + hit.collider.gameObject.name);
         }
     }

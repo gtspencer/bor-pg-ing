@@ -9,10 +9,10 @@ public interface IInteractable
 
 public class InteractionData
 {
-    public ItemScriptableObject heldItem;
+    public InventorySlot heldItem;
     // public Inventory inventory;
 
-    public InteractionData(ItemScriptableObject heldItem/*, Inventory inventory*/)
+    public InteractionData(InventorySlot heldItem/*, Inventory inventory*/)
     {
         this.heldItem = heldItem;
         // this.inventory = inventory;
