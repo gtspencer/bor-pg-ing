@@ -20,7 +20,7 @@ public class FarmGround : MonoBehaviour, IInteractable
     
     public void Interact(InteractionData interactionData)
     {
-        if (currentPlant == null && interactionData.heldItem is PlantScriptableObject item)
+        if (currentPlant == null && interactionData.currentInventorySlot.item is PlantScriptableObject item)
         {
             /*if (interactionData.inventory == null)
                 Debug.LogError("inventory is null");

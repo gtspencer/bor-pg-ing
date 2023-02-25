@@ -91,9 +91,10 @@ public class PlayerInventoryManager : MonoBehaviour
         
     }
 
-    public void AddItem(ItemScriptableObject item, int amount)
+    // returns if the add item was successful
+    public bool AddItem(ItemScriptableObject item, int amount)
     {
-        inventory.AddItem(item, amount);
+        return inventory.AddItem(item, amount);
     }
 
     private void UpdateInventoryUI(ItemScriptableObject item, int amount, bool newItem = false)
@@ -122,7 +123,7 @@ public class PlayerInventoryManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        inventory.Container.Clear();
+        inventory.Container = new InventorySlot[24];
     }
 
     public bool CanPickupItem(ItemScriptableObject item)

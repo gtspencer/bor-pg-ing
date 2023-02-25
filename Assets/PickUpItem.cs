@@ -36,11 +36,12 @@ public class PickUpItem : MonoBehaviour
         var inventory = other.gameObject.GetComponent<PlayerInventoryManager>();
         if (inventory == null)
             return;
-        
-        if (!inventory.CanPickupItem(item))
+
+        var successful = inventory.AddItem(item, amount);
+
+        if (!successful)
             return;
         
-        inventory.AddItem(item, amount);
         pickedUp = true;
         
         StartCoroutine(DoPickup(other.transform));

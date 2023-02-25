@@ -9,12 +9,12 @@ public interface IInteractable
 
 public class InteractionData
 {
-    public InventorySlot heldItem;
+    public InventorySlot currentInventorySlot;
     // public Inventory inventory;
 
-    public InteractionData(InventorySlot heldItem/*, Inventory inventory*/)
+    public InteractionData(InventorySlot currentInventorySlot/*, Inventory inventory*/)
     {
-        this.heldItem = heldItem;
+        this.currentInventorySlot = currentInventorySlot;
         // this.inventory = inventory;
     }
 }

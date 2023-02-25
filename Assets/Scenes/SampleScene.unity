@@ -2171,7 +2171,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7758112, y: 1}
+    m_SensorSize: {x: 1.7781065, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -7404,9 +7404,9 @@ MonoBehaviour:
   itemSlotPrefab: {fileID: 6272833359065043749, guid: cd4824cb93d37d444a1065cfbabcf108, type: 3}
   X_START: -125
   Y_START: 155
-  X_SPACE_BETWEEN_ITEM: 35
-  NUMBER_OF_COLUMN: 6
-  Y_SPACE_BETWEEN_ITEM: 35
+  X_SPACE_BETWEEN_ITEM: 45
+  NUMBER_OF_COLUMN: 4
+  Y_SPACE_BETWEEN_ITEM: 45
 --- !u!1 &1647003157
 GameObject:
   m_ObjectHideFlags: 0
