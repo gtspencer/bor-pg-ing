@@ -18,10 +18,18 @@ public class FarmGround : MonoBehaviour, IInteractable
         wateredSchedule = new Dictionary<int, bool>();
     }
     
-    public void Interact()
+    public void Interact(InteractionData interactionData)
     {
-        var tomato = UnityEngine.Resources.Load<PlantScriptableObject>("ScriptableAssets/Farming/TomatoPlant");
-        Plant(tomato);
+        if (currentPlant == null && interactionData.heldItem is PlantScriptableObject item)
+        {
+            /*if (interactionData.inventory == null)
+                Debug.LogError("inventory is null");
+            interactionData.inventory.RemoveItem(item);*/
+            Plant(item);
+        }
+        
+        // var tomato = UnityEngine.Resources.Load<PlantScriptableObject>("ScriptableAssets/Farming/TomatoPlant");
+        // Plant(tomato);
     }
 
     // TESTING ONLY

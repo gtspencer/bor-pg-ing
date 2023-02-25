@@ -9,6 +9,7 @@ public class PickUpItem : MonoBehaviour
 {
     [SerializeField] private ItemScriptableObject item;
     [SerializeField] private float scale = 1;
+    [SerializeField] private int amount = 1;
 
     private SpriteRenderer renderer;
     private Collider2D collider;
@@ -29,22 +30,17 @@ public class PickUpItem : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.LogError("hit " + other.gameObject.name);
         if (pickedUp)
             return;
         
-        Debug.LogError("1");
-        var inventory = other.gameObject.GetComponent<Inventory>();
+        var inventory = other.gameObject.GetComponent<PlayerInventoryManager>();
         if (inventory == null)
             return;
-
-        Debug.LogError("2");
-
+        
         if (!inventory.CanPickupItem(item))
             return;
         
-        Debug.LogError("3");
-        inventory.AddItem(item);
+        inventory.AddItem(item, amount);
         pickedUp = true;
         
         StartCoroutine(DoPickup(other.transform));

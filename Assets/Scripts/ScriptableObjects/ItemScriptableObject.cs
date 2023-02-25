@@ -3,8 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Collider2D))]
-public class ItemScriptableObject : ScriptableObject
+public abstract class ItemScriptableObject : ScriptableObject
 {
     public string name;
     public string description;
@@ -23,12 +22,14 @@ public class ItemScriptableObject : ScriptableObject
     {
         None,
         Plant,
-        HarvestedPlant
+        HarvestedPlant,
+        Tool
     }
 
     public enum ItemType
     {
         TomatoSeed,
         Tomato,
+        Axe
     }
 }

@@ -3,20 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Inventory : MonoBehaviour
+public class PlayerInventoryManager : MonoBehaviour
 {
     // items and their counts
-    private Dictionary<ItemScriptableObject.ItemType, int> inventoryItems;
+    [SerializeField]
+    private InventoryScriptableObject inventory;
 
     [SerializeField] private HotBarSlotItem[] hotBarSlots;
 
-    private HotBarSlotItem currentSelected;
+    private HotBarSlotItem currentSlotSelected;
+
+    public HotBarSlotItem CurrentSelected
+    {
+        get => currentSlotSelected;
+    }
 
     private void Start()
     {
-        inventoryItems = new Dictionary<ItemScriptableObject.ItemType, int>();
-        currentSelected = hotBarSlots[0];
-        currentSelected.SetSelected();
+        currentSlotSelected = hotBarSlots[0];
+        currentSlotSelected.SetSelected();
     }
 
     private void Update()
@@ -27,10 +32,10 @@ public class Inventory : MonoBehaviour
 
     private void SetSelected(int index)
     {
-        currentSelected.SetUnselected();
+        currentSlotSelected.SetUnselected();
             
-        currentSelected = hotBarSlots[index];
-        currentSelected.SetSelected();
+        currentSlotSelected = hotBarSlots[index];
+        currentSlotSelected.SetSelected();
     }
 
     private void ProcesPlayerInputs()
@@ -83,24 +88,15 @@ public class Inventory : MonoBehaviour
 
     private void Awake()
     {
-        inventoryItems = new Dictionary<ItemScriptableObject.ItemType, int>();
+        
     }
 
-    public void AddItem(ItemScriptableObject item)
+    public void AddItem(ItemScriptableObject item, int amount)
     {
-        if (inventoryItems.ContainsKey(item.itemType))
-        {
-            inventoryItems[item.itemType]++;
-            UpdateInventoryUI(item);
-        }
-        else
-        {
-            AddNewItem(item);
-            UpdateInventoryUI(item, true);
-        }
+        inventory.AddItem(item, amount);
     }
 
-    private void UpdateInventoryUI(ItemScriptableObject item, bool newItem = false)
+    private void UpdateInventoryUI(ItemScriptableObject item, int amount, bool newItem = false)
     {
         if (newItem)
         {
@@ -108,7 +104,7 @@ public class Inventory : MonoBehaviour
             {
                 if (!slotItem.inventoryItemPresentation.isOccupied)
                 {
-                    slotItem.inventoryItemPresentation.SlotItem(item);
+                    slotItem.inventoryItemPresentation.SlotItem(item, amount);
                     return;
                 }
             }
@@ -118,10 +114,15 @@ public class Inventory : MonoBehaviour
         {
             if (slotItem.inventoryItemPresentation.GetSlottedItem() == item)
             {
-                slotItem.inventoryItemPresentation.AddItem();
+                slotItem.inventoryItemPresentation.AddAmount(amount);
                 return;
             }
         }
+    }
+
+    private void OnApplicationQuit()
+    {
+        inventory.Container.Clear();
     }
 
     public bool CanPickupItem(ItemScriptableObject item)
@@ -139,9 +140,9 @@ public class Inventory : MonoBehaviour
         return true;
     }
 
-    private void AddNewItem(ItemScriptableObject item)
+    /*private void AddNewItem(ItemScriptableObject item, int amount)
     {
-        inventoryItems[item.itemType] = 1;
+        inventoryItems[item.itemType] = amount;
     }
 
     public void RemoveItem(ItemScriptableObject item)
@@ -150,6 +151,7 @@ public class Inventory : MonoBehaviour
             return;
 
         inventoryItems[item.itemType]--;
-    }
+        UpdateInventoryUI(item, inventoryItems[item.itemType]);
+    }*/
     
 }

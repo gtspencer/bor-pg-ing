@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +6,7 @@ using UnityEngine.UI;
 
 public class InventoryItemSlotPresentation : MonoBehaviour
 {
-    [SerializeField] private RawImage itemSprite;
+    [SerializeField] private Image itemSprite;
     [SerializeField] private Text countText;
     private ItemScriptableObject slottedItem;
 
@@ -17,13 +18,18 @@ public class InventoryItemSlotPresentation : MonoBehaviour
     public int itemCount;
     public int maxStack;
 
-    public void SlotItem(ItemScriptableObject slottedItem)
+    private void Start()
+    {
+        UpdatePresentation();
+    }
+
+    public void SlotItem(ItemScriptableObject slottedItem, int amount)
     {
         this.slottedItem = slottedItem;
         maxStack = slottedItem.maxInventoryStack;
-        itemCount = 0;
-        UpdateCountText();
-        itemSprite.texture = slottedItem.inventoryIcon.texture;
+        itemCount = amount;
+        UpdatePresentation();
+        itemSprite.sprite = slottedItem.inventoryIcon;
     }
 
     public ItemScriptableObject GetSlottedItem()
@@ -37,17 +43,17 @@ public class InventoryItemSlotPresentation : MonoBehaviour
         itemCount = 0;
         maxStack = 0;
         
-        UpdateCountText();
+        UpdatePresentation();
     }
     
-    public void AddItem()
+    public void AddAmount(int amount)
     {
-        if (itemCount >= maxStack)
+        if (itemCount + amount > maxStack)
             return;
         
-        itemCount++;
+        itemCount += amount;
 
-        UpdateCountText();
+        UpdatePresentation();
     }
     
     public void RemoveItem()
@@ -61,11 +67,20 @@ public class InventoryItemSlotPresentation : MonoBehaviour
 
         itemCount--;
 
-        UpdateCountText();
+        UpdatePresentation();
     }
 
-    private void UpdateCountText()
+    private void UpdatePresentation()
     {
         countText.text = itemCount.ToString();
+
+        if (!isOccupied && itemSprite.enabled)
+        {
+            itemSprite.enabled = false;
+        }
+        else if (isOccupied && !itemSprite.enabled)
+        {
+            itemSprite.enabled = true;
+        }
     }
 }

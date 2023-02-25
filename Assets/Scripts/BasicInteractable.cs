@@ -16,7 +16,7 @@ public class BasicInteractable : MonoBehaviour, IInteractable
         
     }
 
-    public void Interact()
+    public void Interact(InteractionData interactionData)
     {
         LeanTween.scale(gameObject, Vector3.one * 1.2f, 1f).setEasePunch();
     }

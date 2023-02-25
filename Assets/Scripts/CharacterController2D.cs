@@ -14,6 +14,10 @@ public class CharacterController2D : MonoBehaviour, IPointerClickHandler
     private float speed = 2f;
 
     private PlayerStateMachine playerStateMachine;
+    [SerializeField]
+    private InventoryScriptableObject inventory;
+
+    [SerializeField] private GameObject inventoryUI;
 
     private Vector2 currentMotion;
 
@@ -29,22 +33,27 @@ public class CharacterController2D : MonoBehaviour, IPointerClickHandler
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponentInChildren<Animator>();
         playerStateMachine = GetComponent<PlayerStateMachine>();
+
+        if (inventory == null)
+            Debug.LogError("inventory is null on start");
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (playerStateMachine.currentState != PlayerStateMachine.States.Roam)
-            return;
-        
         ProcessPlayerInputs();
     }
 
     private void ProcessPlayerInputs()
     {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            ToggleInventory();
+        }
+        
         if (Input.GetMouseButtonDown(0))
             TryInteract();
-        
+            
         var horizontalAxis = Input.GetAxisRaw("Horizontal");
         var verticalAxis = Input.GetAxisRaw("Vertical");
         currentMotion = new Vector2(horizontalAxis, verticalAxis);
@@ -64,6 +73,21 @@ public class CharacterController2D : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    private void ToggleInventory()
+    {
+        switch (playerStateMachine.currentState)
+        {
+            case PlayerStateMachine.States.Inventory:
+                inventoryUI.SetActive(false);
+                playerStateMachine.currentState = PlayerStateMachine.States.Roam;
+                break;
+            default:
+                inventoryUI.SetActive(true);
+                playerStateMachine.currentState = PlayerStateMachine.States.Inventory;
+                break;
+        }
+    }
+
     private void TryInteract()
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -75,11 +99,14 @@ public class CharacterController2D : MonoBehaviour, IPointerClickHandler
             return;
 
         var interactable = hit.collider.gameObject.GetComponent<IInteractable>();
-        
+
         if (interactable != null && Vector2.Distance(transform.position, hit.transform.position) <= maxInteractionDistance)
-            interactable.Interact();
-        
-        Debug.Log("User clicked: " + hit.collider.gameObject.name);
+        {
+            InteractionData interactionData = new InteractionData(/*inventory.CurrentSelected.inventoryItemPresentation.GetSlottedItem()*/null);
+            interactable.Interact(interactionData);
+            
+            Debug.Log("User clicked interactable: " + hit.collider.gameObject.name);
+        }
     }
 
     private void FixedUpdate()
