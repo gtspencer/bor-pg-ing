@@ -33,6 +33,15 @@ public class DisplayInventory : MonoBehaviour
         
         AddSwapEvent(gameObject, EventTriggerType.PointerEnter, delegate(BaseEventData arg0) { EnterInventoryScreen(); });
         AddSwapEvent(gameObject, EventTriggerType.PointerExit, delegate(BaseEventData arg0) { ExitInventoryScreen(); });
+
+        inventory.OnInventoryChanged += UpdateSlots;
+        
+        this.gameObject.SetActive(false);
+    }
+
+    private void OnEnable()
+    {
+        UpdateSlots();
     }
 
     private GameObject CreateNewSlot(int i)
@@ -52,35 +61,9 @@ public class DisplayInventory : MonoBehaviour
             Y_START + (-Y_SPACE_BETWEEN_ITEM * (i / NUMBER_OF_COLUMN)), 0f);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        UpdateSlots();
-    }
-
     private void SetSlotInfo(GameObject slotObject, InventorySlot slotData)
     {
-        
-        if (slotData.item == null)
-        {
-            slotObject.GetComponent<InventorySlotDisplay>().UpdateSlotDisplay(null, 0);
-            
-            
-            /*slotObject.GetComponentInChildren<TextMeshProUGUI>().text = "";
-            var image = slotObject.GetComponentInChildren<Image>();
-            image.sprite = null;
-            image.color = Color.gray;*/
-        }
-        else
-        {
-            slotObject.GetComponent<InventorySlotDisplay>().UpdateSlotDisplay(slotData.item.inventoryIcon, slotData.amount);
-            
-            
-            /*slotObject.GetComponentInChildren<TextMeshProUGUI>().text = slotData.amount <= 1 ? "" : slotData.amount.ToString("n0");
-            var image = slotObject.GetComponentInChildren<Image>();
-            image.sprite = slotData.item.inventoryIcon;
-            image.color = new Color(1, 1, 1, 1);*/
-        }
+        slotObject.GetComponent<InventorySlotDisplay>().SetHeldSlot(slotData);
     }
 
     private void UpdateSlots()
@@ -94,6 +77,10 @@ public class DisplayInventory : MonoBehaviour
     private void AddSwapEvent(GameObject itemSlot, EventTriggerType type, UnityAction<BaseEventData> action)
     {
         EventTrigger trigger = itemSlot.GetComponent<EventTrigger>();
+
+        if (trigger == null)
+            trigger = itemSlot.GetComponentInChildren<EventTrigger>();
+        
         var eventTrigger = new EventTrigger.Entry();
         eventTrigger.eventID = type;
         eventTrigger.callback.AddListener(action);
@@ -105,18 +92,6 @@ public class DisplayInventory : MonoBehaviour
     {
         itemsDisplayed = new Dictionary<GameObject, InventorySlot>();
 
-        /*for (int i = 0; i < 10; i++)
-        {
-            var slot = hotBarSlots[i];
-            SetSlotInfo(slot, inventory.Container[i]);
-            
-            AddSwapEvent(slot, EventTriggerType.PointerEnter, delegate(BaseEventData arg0) { OnEnter(slot); });
-            AddSwapEvent(slot, EventTriggerType.PointerExit, delegate(BaseEventData arg0) { OnExit(slot); });
-            AddSwapEvent(slot, EventTriggerType.BeginDrag, delegate(BaseEventData arg0) { OnDragStart(slot); });
-            AddSwapEvent(slot, EventTriggerType.EndDrag, delegate(BaseEventData arg0) { OnDragEnd(slot); });
-            AddSwapEvent(slot, EventTriggerType.Drag, delegate(BaseEventData arg0) { OnDrag(slot); });
-        }*/
-
         for (int i = 0; i < inventory.Container.Length; i++)
         {
             GameObject slot = null;
@@ -124,7 +99,7 @@ public class DisplayInventory : MonoBehaviour
                 slot = hotBarSlots[i];
             else
                 slot = CreateNewSlot(i);
-            
+
             AddSwapEvent(slot, EventTriggerType.PointerEnter, delegate(BaseEventData arg0) { OnEnter(slot); });
             AddSwapEvent(slot, EventTriggerType.PointerExit, delegate(BaseEventData arg0) { OnExit(slot); });
             AddSwapEvent(slot, EventTriggerType.BeginDrag, delegate(BaseEventData arg0) { OnDragStart(slot); });
@@ -154,9 +129,7 @@ public class DisplayInventory : MonoBehaviour
         if (itemsDisplayed[slot].item == null)
             return;
 
-        var holdingShift = false;
-        if (Input.GetKey(KeyCode.LeftShift))
-            holdingShift = true;
+        bool holdingShift = Input.GetKey(KeyCode.LeftShift);
 
         var mouseObject = new GameObject("Mouse Object");
         var rt = mouseObject.AddComponent<RectTransform>();

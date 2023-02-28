@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class HotBarSlotDisplay : InventorySlotDisplay
 {
     [SerializeField] private RawImage selectedBox;
-    private InventorySlot heldSlot;
 
     // Start is called before the first frame update
     void Awake()
@@ -15,11 +14,6 @@ public class HotBarSlotDisplay : InventorySlotDisplay
         selectedBox.enabled = false;
     }
 
-    public void SetHeldSlot(InventorySlot heldSlot)
-    {
-        this.heldSlot = heldSlot;
-    }
-    
     public void SetSelected()
     {
         selectedBox.enabled = true;

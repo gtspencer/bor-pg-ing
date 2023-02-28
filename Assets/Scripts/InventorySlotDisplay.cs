@@ -9,16 +9,15 @@ public class InventorySlotDisplay : MonoBehaviour
     [SerializeField] private TextMeshProUGUI countText;
 
     [SerializeField] private Image spriteImage;
-    // Start is called before the first frame update
-    void Start()
+    private InventorySlot heldSlot;
+    public void SetHeldSlot(InventorySlot heldSlot)
     {
-        // TODO PUT THIS ON ALL INVENTORY SLOTS AND HOOKUP
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
+        this.heldSlot = heldSlot;
         
+        if (heldSlot.item != null)
+            UpdateSlotDisplay(heldSlot.item.inventoryIcon, heldSlot.amount);
+        else
+            UpdateSlotDisplay(null, 0);
     }
 
     public void UpdateSlotDisplay(Sprite sprite, int count)
@@ -37,11 +36,17 @@ public class InventorySlotDisplay : MonoBehaviour
 
     public void SetImage(Sprite sprite)
     {
-        spriteImage.sprite = sprite;
-        
+
+
         if (sprite == null)
+        {
             spriteImage.color = Color.gray;
+            spriteImage.sprite = null;
+        }
         else
+        {
+            spriteImage.sprite = sprite;
             spriteImage.color = new Color(1, 1, 1, 1);
+        }
     }
 }

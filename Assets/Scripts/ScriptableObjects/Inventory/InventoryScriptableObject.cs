@@ -1,12 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(menuName ="ScriptableObjects/Inventory")]
 public class InventoryScriptableObject : ScriptableObject
 {
     public InventorySlot[] Container = new InventorySlot[24];
-    
+    public Action OnInventoryChanged = () => { };
+
     public bool AddItem(ItemScriptableObject item, int amount)
     {
         for (int i = 0; i < Container.Length; i++)
@@ -15,6 +18,7 @@ public class InventoryScriptableObject : ScriptableObject
             if (Container[i].item == item && Container[i].amount + amount <= Container[i].maxAmount)
             {
                 Container[i].AddAmount(amount);
+                OnInventoryChanged.Invoke();
                 return true;
             }
         }
@@ -25,6 +29,7 @@ public class InventoryScriptableObject : ScriptableObject
             return false;
 
         // TODO modify for full inventory
+        OnInventoryChanged?.Invoke();
         return true;
     }
 
@@ -34,6 +39,7 @@ public class InventoryScriptableObject : ScriptableObject
         item2.UpdateSlot(item1.item, item1.amount);
 
         item1.UpdateSlot(temp.item, temp.amount);
+        OnInventoryChanged?.Invoke();
     }
 
     public void RemoveItem(ItemScriptableObject item, int amount)
@@ -48,6 +54,7 @@ public class InventoryScriptableObject : ScriptableObject
                     Container[i].UpdateSlot(item, Container[i].amount - amount);
             }
         }
+        OnInventoryChanged?.Invoke();
     }
 
     public InventorySlot SetFirstEmptySlot(ItemScriptableObject item, int amount)
