@@ -9,11 +9,11 @@ public class PlayerInventoryManager : MonoBehaviour
     [SerializeField]
     private InventoryScriptableObject inventory;
 
-    [SerializeField] private HotBarSlotItem[] hotBarSlots;
+    [SerializeField] private HotBarSlotDisplay[] hotBarSlots;
 
-    private HotBarSlotItem currentSlotSelected;
+    private HotBarSlotDisplay currentSlotSelected;
 
-    public HotBarSlotItem CurrentSelected
+    public HotBarSlotDisplay CurrentSelected
     {
         get => currentSlotSelected;
     }
@@ -99,6 +99,7 @@ public class PlayerInventoryManager : MonoBehaviour
 
     public void DropItem(ItemScriptableObject item, int amount)
     {
+        inventory.RemoveItem(item, amount);
         var droppedItem = new GameObject();
         var pickupItem = droppedItem.AddComponent<PickUpItem>();
 
@@ -107,33 +108,9 @@ public class PlayerInventoryManager : MonoBehaviour
         droppedItem.transform.position = transform.position;
     }
 
-    private void UpdateInventoryUI(ItemScriptableObject item, int amount, bool newItem = false)
-    {
-        if (newItem)
-        {
-            foreach (HotBarSlotItem slotItem in hotBarSlots)
-            {
-                if (!slotItem.inventoryItemPresentation.isOccupied)
-                {
-                    slotItem.inventoryItemPresentation.SlotItem(item, amount);
-                    return;
-                }
-            }
-        }
-        
-        foreach (HotBarSlotItem slotItem in hotBarSlots)
-        {
-            if (slotItem.inventoryItemPresentation.GetSlottedItem() == item)
-            {
-                slotItem.inventoryItemPresentation.AddAmount(amount);
-                return;
-            }
-        }
-    }
-
     private void OnApplicationQuit()
     {
-        inventory.Container = new InventorySlot[24];
+        inventory.Container = new InventorySlot[40];
     }
 
     public bool CanPickupItem(ItemScriptableObject item)

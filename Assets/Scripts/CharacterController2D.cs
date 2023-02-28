@@ -21,7 +21,7 @@ public class CharacterController2D : MonoBehaviour, IPointerClickHandler
 
     private Vector2 currentMotion;
 
-    private Vector2 lastMotion;
+    // private Vector2 lastMotion;
 
     private bool moving;
 
@@ -68,7 +68,7 @@ public class CharacterController2D : MonoBehaviour, IPointerClickHandler
         
         if (horizontalAxis != 0 || verticalAxis != 0)
         {
-            lastMotion = new Vector2(horizontalAxis, verticalAxis).normalized;
+            // lastMotion = new Vector2(horizontalAxis, verticalAxis).normalized;
             
             anim.SetFloat("lastHorizontal", horizontalAxis);
             anim.SetFloat("lastVertical", verticalAxis);

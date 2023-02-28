@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[Obsolete]
 public class InventoryItemSlotPresentation : MonoBehaviour
 {
     [SerializeField] private Image itemSprite;

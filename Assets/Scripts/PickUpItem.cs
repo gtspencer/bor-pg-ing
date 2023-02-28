@@ -25,11 +25,6 @@ public class PickUpItem : MonoBehaviour
         this.transform.localScale *= item.inventoryIconScale;
     }
 
-    private void SetupPickup()
-    {
-        
-    }
-
     private bool recentlyPlaced;
     public void PlacePickupItem(ItemScriptableObject item, int amount)
     {
@@ -59,6 +54,9 @@ public class PickUpItem : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
+        if (pickedUp)
+            return;
+        
         var inventory = other.gameObject.GetComponent<PlayerInventoryManager>();
         if (inventory == null)
             return;

@@ -13,13 +13,15 @@ public class DisplayInventory : MonoBehaviour
     public InventoryScriptableObject inventory;
     public GameObject itemSlotPrefab;
 
-    public int X_START;
-    public int Y_START;
-    public int X_SPACE_BETWEEN_ITEM;
+    public float X_START;
+    public float Y_START;
+    public float X_SPACE_BETWEEN_ITEM;
 
     public int NUMBER_OF_COLUMN;
 
-    public int Y_SPACE_BETWEEN_ITEM;
+    public float Y_SPACE_BETWEEN_ITEM;
+
+    [SerializeField] private List<GameObject> hotBarSlots;
 
     // gameobject is inventory slot prefab
     private Dictionary<GameObject, InventorySlot> itemsDisplayed =
@@ -58,19 +60,26 @@ public class DisplayInventory : MonoBehaviour
 
     private void SetSlotInfo(GameObject slotObject, InventorySlot slotData)
     {
+        
         if (slotData.item == null)
         {
-            slotObject.GetComponentInChildren<TextMeshProUGUI>().text = "";
+            slotObject.GetComponent<InventorySlotDisplay>().UpdateSlotDisplay(null, 0);
+            
+            
+            /*slotObject.GetComponentInChildren<TextMeshProUGUI>().text = "";
             var image = slotObject.GetComponentInChildren<Image>();
             image.sprite = null;
-            image.color = Color.gray;
+            image.color = Color.gray;*/
         }
         else
         {
-            slotObject.GetComponentInChildren<TextMeshProUGUI>().text = slotData.amount <= 1 ? "" : slotData.amount.ToString("n0");
+            slotObject.GetComponent<InventorySlotDisplay>().UpdateSlotDisplay(slotData.item.inventoryIcon, slotData.amount);
+            
+            
+            /*slotObject.GetComponentInChildren<TextMeshProUGUI>().text = slotData.amount <= 1 ? "" : slotData.amount.ToString("n0");
             var image = slotObject.GetComponentInChildren<Image>();
             image.sprite = slotData.item.inventoryIcon;
-            image.color = new Color(1, 1, 1, 1);
+            image.color = new Color(1, 1, 1, 1);*/
         }
     }
 
@@ -96,9 +105,25 @@ public class DisplayInventory : MonoBehaviour
     {
         itemsDisplayed = new Dictionary<GameObject, InventorySlot>();
 
+        /*for (int i = 0; i < 10; i++)
+        {
+            var slot = hotBarSlots[i];
+            SetSlotInfo(slot, inventory.Container[i]);
+            
+            AddSwapEvent(slot, EventTriggerType.PointerEnter, delegate(BaseEventData arg0) { OnEnter(slot); });
+            AddSwapEvent(slot, EventTriggerType.PointerExit, delegate(BaseEventData arg0) { OnExit(slot); });
+            AddSwapEvent(slot, EventTriggerType.BeginDrag, delegate(BaseEventData arg0) { OnDragStart(slot); });
+            AddSwapEvent(slot, EventTriggerType.EndDrag, delegate(BaseEventData arg0) { OnDragEnd(slot); });
+            AddSwapEvent(slot, EventTriggerType.Drag, delegate(BaseEventData arg0) { OnDrag(slot); });
+        }*/
+
         for (int i = 0; i < inventory.Container.Length; i++)
         {
-            var slot = CreateNewSlot(i);
+            GameObject slot = null;
+            if (i < 10)
+                slot = hotBarSlots[i];
+            else
+                slot = CreateNewSlot(i);
             
             AddSwapEvent(slot, EventTriggerType.PointerEnter, delegate(BaseEventData arg0) { OnEnter(slot); });
             AddSwapEvent(slot, EventTriggerType.PointerExit, delegate(BaseEventData arg0) { OnExit(slot); });
@@ -128,20 +153,38 @@ public class DisplayInventory : MonoBehaviour
     {
         if (itemsDisplayed[slot].item == null)
             return;
-        
-        var mouseObject = new GameObject();
+
+        var holdingShift = false;
+        if (Input.GetKey(KeyCode.LeftShift))
+            holdingShift = true;
+
+        var mouseObject = new GameObject("Mouse Object");
         var rt = mouseObject.AddComponent<RectTransform>();
         rt.sizeDelta = new Vector2(40, 40);
         mouseObject.transform.SetParent(transform.parent);
 
         var img = mouseObject.AddComponent<Image>();
         img.sprite = itemsDisplayed[slot].item.inventoryIcon;
-            
+
+        var holdingAmount = itemsDisplayed[slot].amount;
+        if (holdingShift)
+        {
+            holdingAmount /= 2;
+        }
+
+        var amount = new GameObject("Amount Text", typeof(TextMeshProUGUI));
+        amount.transform.SetParent(mouseObject.transform);
+        var textObj = amount.GetComponent<TextMeshProUGUI>();
+        textObj.text = holdingAmount.ToString("n0");
+        textObj.raycastTarget = false;
+        textObj.alignment = TextAlignmentOptions.Center;
+
         // mouse ignores object
         img.raycastTarget = false;
 
         mouseItem.obj = mouseObject;
         mouseItem.item = itemsDisplayed[slot];
+        mouseItem.itemAmount = holdingAmount;
     }
     
     private void OnDragEnd(GameObject slot)
@@ -151,6 +194,12 @@ public class DisplayInventory : MonoBehaviour
         
         if (mouseItem.hoverObject)
         {
+            // TODO split inventory
+            /*if (mouseItem.itemAmount < mouseItem.item.amount)
+            {
+                mouseItem.item.amount -= mouseItem.itemAmount;
+            }*/
+            
             // item can be placed in slot
             inventory.MoveItems(itemsDisplayed[slot], itemsDisplayed[mouseItem.hoverObject]);
         }
@@ -166,7 +215,7 @@ public class DisplayInventory : MonoBehaviour
             
             // remove item
             inventoryManager.DropItem(itemsDisplayed[slot].item, itemsDisplayed[slot].amount);
-            inventory.RemoveItem(itemsDisplayed[slot].item, itemsDisplayed[slot].amount);
+            
         }
         Destroy(mouseItem.obj);
         mouseItem.item = null;
@@ -200,5 +249,7 @@ public class MouseItem
     public InventorySlot hoverItem;
     // gameobject of item to swap
     public GameObject hoverObject;
+    // amount of item grabbed
+    public int itemAmount;
 
 }

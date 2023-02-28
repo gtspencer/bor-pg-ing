@@ -4,18 +4,20 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // different ui to display inventory item slot presentation item
-public class HotBarSlotItem : MonoBehaviour
+public class HotBarSlotDisplay : InventorySlotDisplay
 {
     [SerializeField] private RawImage selectedBox;
-
-    public InventoryItemSlotPresentation inventoryItemPresentation;
+    private InventorySlot heldSlot;
 
     // Start is called before the first frame update
     void Awake()
     {
         selectedBox.enabled = false;
+    }
 
-        inventoryItemPresentation = this.GetComponent<InventoryItemSlotPresentation>();
+    public void SetHeldSlot(InventorySlot heldSlot)
+    {
+        this.heldSlot = heldSlot;
     }
     
     public void SetSelected()
