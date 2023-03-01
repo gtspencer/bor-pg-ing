@@ -50,19 +50,30 @@ public class NPCController2D : MonoBehaviour
         agent.destination = target.position;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void CheckIfStuck()
     {
-        agent.destination = target.position;
+        
     }
 
     private void FixedUpdate()
     {
-        // Move();
-    }
+        agent.destination = target.position;
 
-    private void Move()
-    {
-        rb.velocity = currentMotion * speed;
+        var velocity = agent.velocity;
+        var horizontalAxis = velocity.x;
+        var verticalAxis = velocity.y;
+        anim.SetFloat("horizontal", horizontalAxis);
+        anim.SetFloat("vertical", verticalAxis);
+
+        moving = horizontalAxis != 0 || verticalAxis != 0;
+        anim.SetBool("moving", moving);
+        
+        if (horizontalAxis != 0 || verticalAxis != 0)
+        {
+            // lastMotion = new Vector2(horizontalAxis, verticalAxis).normalized;
+            
+            anim.SetFloat("lastHorizontal", horizontalAxis);
+            anim.SetFloat("lastVertical", verticalAxis);
+        }
     }
 }
