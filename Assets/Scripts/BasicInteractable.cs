@@ -5,9 +5,9 @@ using UnityEngine;
 public class BasicInteractable : MonoBehaviour, IInteractable
 {
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        
+        this.gameObject.layer = LayerMask.NameToLayer("Interactable");
     }
 
     // Update is called once per frame

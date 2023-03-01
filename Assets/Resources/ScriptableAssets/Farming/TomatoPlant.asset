@@ -35,4 +35,4 @@ MonoBehaviour:
   - {fileID: 6541508295191479496, guid: d8e8faa00871c448d8cdd3253ddf1177, type: 3}
   daysUntilBloom: 6
   lightRequirement: 2
-  waterRequirement: 0
+  waterRequirement: 2

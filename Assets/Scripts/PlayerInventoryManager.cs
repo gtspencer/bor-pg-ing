@@ -11,17 +11,19 @@ public class PlayerInventoryManager : MonoBehaviour
 
     [SerializeField] private HotBarSlotDisplay[] hotBarSlots;
 
-    private HotBarSlotDisplay currentSlotSelected;
+    private HotBarSlotDisplay currentHotBarSlot;
 
-    public HotBarSlotDisplay CurrentSelected
+    public InventorySlot CurrentSelectedSlot
     {
-        get => currentSlotSelected;
+        get => currentHotBarSlot.HeldSlot;
     }
 
     private void Start()
     {
-        currentSlotSelected = hotBarSlots[0];
-        currentSlotSelected.SetSelected();
+        inventory.SetupCallbacks();
+        
+        currentHotBarSlot = hotBarSlots[0];
+        currentHotBarSlot.SetSelected();
     }
 
     private void Update()
@@ -32,10 +34,10 @@ public class PlayerInventoryManager : MonoBehaviour
 
     private void SetSelected(int index)
     {
-        currentSlotSelected.SetUnselected();
+        currentHotBarSlot.SetUnselected();
             
-        currentSlotSelected = hotBarSlots[index];
-        currentSlotSelected.SetSelected();
+        currentHotBarSlot = hotBarSlots[index];
+        currentHotBarSlot.SetSelected();
     }
 
     private void ProcesPlayerInputs()
@@ -84,11 +86,6 @@ public class PlayerInventoryManager : MonoBehaviour
         {
             SetSelected(8);
         }
-    }
-
-    private void Awake()
-    {
-        
     }
 
     // returns if the add item was successful

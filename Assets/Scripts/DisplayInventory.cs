@@ -37,6 +37,8 @@ public class DisplayInventory : MonoBehaviour
         inventory.OnInventoryChanged += UpdateSlots;
         
         this.gameObject.SetActive(false);
+        
+        UpdateSlots();
     }
 
     private void OnEnable()

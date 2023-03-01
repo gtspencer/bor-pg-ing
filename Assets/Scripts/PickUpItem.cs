@@ -23,6 +23,8 @@ public class PickUpItem : MonoBehaviour
         coll.isTrigger = true;
 
         this.transform.localScale *= item.inventoryIconScale;
+        
+        this.gameObject.layer = LayerMask.NameToLayer("Interactable");
     }
 
     private bool recentlyPlaced;

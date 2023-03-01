@@ -10,6 +10,17 @@ public class InventoryScriptableObject : ScriptableObject
     public InventorySlot[] Container = new InventorySlot[24];
     public Action OnInventoryChanged = () => { };
 
+    public void SetupCallbacks()
+    {
+        foreach (InventorySlot slot in Container)
+            slot.OnAmountChanged += AmountChangedInSlot;
+    }
+
+    private void AmountChangedInSlot()
+    {
+        OnInventoryChanged.Invoke();
+    }
+
     public bool AddItem(ItemScriptableObject item, int amount)
     {
         for (int i = 0; i < Container.Length; i++)
@@ -78,21 +89,28 @@ public class InventorySlot
     public ItemScriptableObject item;
     public int amount;
     public int maxAmount => item.maxInventoryStack;
+    
+    public Action OnAmountChanged = () => { };
 
     public InventorySlot(ItemScriptableObject item, int amount)
     {
-        this.item = item;
-        this.amount = amount;
+        UpdateSlot(item, amount);
     }
 
     public void AddAmount(int value)
     {
         amount += value;
+        OnAmountChanged?.Invoke();
     }
 
     public void RemoveAmount(int value)
     {
         amount -= value;
+
+        if (amount <= 0)
+            UpdateSlot(null, 0);
+        
+        OnAmountChanged?.Invoke();
     }
 
     public void UpdateSlot(ItemScriptableObject item, int amount)

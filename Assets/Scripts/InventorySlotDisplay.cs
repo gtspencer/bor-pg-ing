@@ -10,6 +10,8 @@ public class InventorySlotDisplay : MonoBehaviour
 
     [SerializeField] private Image spriteImage;
     private InventorySlot heldSlot;
+
+    public InventorySlot HeldSlot => heldSlot;
     public void SetHeldSlot(InventorySlot heldSlot)
     {
         this.heldSlot = heldSlot;
@@ -36,8 +38,6 @@ public class InventorySlotDisplay : MonoBehaviour
 
     public void SetImage(Sprite sprite)
     {
-
-
         if (sprite == null)
         {
             spriteImage.color = Color.gray;

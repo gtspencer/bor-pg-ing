@@ -18,6 +18,11 @@ public class FarmGround : MonoBehaviour, IInteractable
         wateredSchedule = new Dictionary<int, bool>();
     }
     
+    private void Start()
+    {
+        this.gameObject.layer = LayerMask.NameToLayer("Interactable");
+    }
+    
     public void Interact(InteractionData interactionData)
     {
         if (currentPlant == null && interactionData.currentInventorySlot.item is PlantScriptableObject item)
@@ -25,6 +30,7 @@ public class FarmGround : MonoBehaviour, IInteractable
             /*if (interactionData.inventory == null)
                 Debug.LogError("inventory is null");
             interactionData.inventory.RemoveItem(item);*/
+            interactionData.currentInventorySlot.RemoveAmount(1);
             Plant(item);
         }
         
@@ -94,7 +100,7 @@ public class FarmGround : MonoBehaviour, IInteractable
     public void KillPlant()
     {
         renderer.sprite = null;
-        Destroy(currentPlant);
+        currentPlant = null;
         Debug.Log("Plant is dead :(");
     }
 

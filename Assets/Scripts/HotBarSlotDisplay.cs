@@ -9,7 +9,7 @@ public class HotBarSlotDisplay : InventorySlotDisplay
     [SerializeField] private RawImage selectedBox;
 
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
         selectedBox.enabled = false;
     }

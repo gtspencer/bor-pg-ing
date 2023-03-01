@@ -18,6 +18,7 @@ public class CharacterController2D : MonoBehaviour, IPointerClickHandler
     private InventoryScriptableObject inventory;
 
     [SerializeField] private GameObject inventoryUI;
+    [SerializeField] private PlayerInventoryManager inventoryManager;
 
     private Vector2 currentMotion;
 
@@ -25,16 +26,17 @@ public class CharacterController2D : MonoBehaviour, IPointerClickHandler
 
     private bool moving;
 
-    private InventorySlot currentSelectedSlot;
+    private InventorySlot currentSelectedSlot => inventoryManager.CurrentSelectedSlot;
 
     [SerializeField]
-    private float maxInteractionDistance = 2f;
+    private float maxInteractionDistance = 1.5f;
     // Start is called before the first frame update
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponentInChildren<Animator>();
         playerStateMachine = GetComponent<PlayerStateMachine>();
+        inventoryManager = GetComponent<PlayerInventoryManager>();
 
         if (inventory == null)
             Debug.LogError("inventory is null on start");
@@ -104,17 +106,25 @@ public class CharacterController2D : MonoBehaviour, IPointerClickHandler
 
         if (interactable != null && Vector2.Distance(transform.position, hit.transform.position) <= maxInteractionDistance)
         {
-            if (currentSelectedSlot.item is ToolScriptableObject)
+            // pass in the inventory slot that is held
+            // interactable object removes amount from slot
+            InteractionData interactionData = new InteractionData(currentSelectedSlot);
+
+            
+            if (currentSelectedSlot.item != null)
             {
-                // TODO tool logic
+                // TODO animation stuff here
+                if (currentSelectedSlot.item is ToolScriptableObject tool)
+                {
+                    switch (tool.itemType)
+                    {
+                        case ItemScriptableObject.ItemType.Axe:
+                            break;
+                    }
+                }
             }
-            else
-            {
-                // pass in the inventory slot that is held
-                // interactable object removes amount from slot
-                InteractionData interactionData = new InteractionData(currentSelectedSlot);
-                interactable.Interact(interactionData);
-            }
+            
+            interactable.Interact(interactionData);
 
             Debug.Log("User clicked interactable: " + hit.collider.gameObject.name);
         }
