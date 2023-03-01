@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class CharacterController2D : MonoBehaviour, IPointerClickHandler
+public class CharacterController2D : MonoBehaviour
 {
     private Rigidbody2D rb;
     private Animator anim;
@@ -138,10 +138,5 @@ public class CharacterController2D : MonoBehaviour, IPointerClickHandler
     private void Move()
     {
         rb.velocity = currentMotion * speed;
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        Debug.LogError(eventData.pointerClick.gameObject.name);
     }
 }
