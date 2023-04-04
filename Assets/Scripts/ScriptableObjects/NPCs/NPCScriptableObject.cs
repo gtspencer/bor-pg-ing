@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,8 @@ public class NPCScriptableObject : ScriptableObject
     public Gender gender;
     public Sprite mugShot;
     public int friendLevel;
+    public NPCScheduleScriptableObject schedule;
+    public Transform navTarget;
 
     public enum Gender
     {
@@ -18,5 +21,10 @@ public class NPCScriptableObject : ScriptableObject
         Nonbinary,
         PreferNotToAnswer,
         None
+    }
+
+    private void Awake()
+    {
+        schedule = ScriptableObject.CreateInstance<NPCScheduleScriptableObject>();
     }
 }
